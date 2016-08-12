@@ -1,0 +1,12 @@
+# NTI Security Parameters
+parameters:
+
+    # Global configuration
+    nti_security.global: [ROLE_USER]
+    nti_security.explicit_deny: true
+    nti_security.error_template: "NTISecurityBundle:Security:error403.html.twig"
+
+    # Secured Actions
+    nti_security.secured_actions:
+        # Dashboard
+        - { 'name': 'glbs_dashboard', 'fqan': 'AppBundle\Controller\Dashboard\DashboardController::indexAction', 'roles': [ROLE_DASHBOARD], 'inherit': ['glbs_dashboard'] }

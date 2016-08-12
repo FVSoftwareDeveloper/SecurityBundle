@@ -1,0 +1,7 @@
+services:
+
+    nti.controller_listener:
+        class: NTI\SecurityBundle\EventListener\SecuredRequestListener
+        arguments: ["@service_container"]
+        tags:
+            - { name: kernel.event_listener, event: kernel.controller }
