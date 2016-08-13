@@ -33,6 +33,7 @@ class SecuredRequestListener {
         $fqcn = ClassUtils::getRealClass($controller[0]);
         $fqan = $fqcn."::".$controller[1];
 
+
         $explicitDeny = $this->container->hasParameter("nti_security.explicit_deny") ? ($this->container->getParameter("nti_security.explicit_deny") === true ? true : false) : true;
         $globals = $this->container->hasParameter("nti_security.global") && is_array($this->container->getParameter('nti_security.global')) ? $this->container->getParameter('nti_security.global') : array();
         $securedActions = $this->container->hasParameter('nti_security.secured_actions') && is_array($this->container->getParameter('nti_security.secured_actions')) ? $this->container->getParameter('nti_security.secured_actions') : array();
@@ -40,14 +41,16 @@ class SecuredRequestListener {
         foreach($securedActions as $securedAction) {
             // If no fqan or roles is defined ignore it
             if(!isset($securedAction["fqan"]) || !isset($securedAction["roles"])) continue;
+            if($fqan != $securedAction["fqan"]) continue; // This is not the action you are looking for.
 
             $actionRoles = $securedAction["roles"];
 
             // Handle inheritance
-            if(isset($securedAction["inherit"])) {
-                $inheritedRoles = $this->getInheritedRoles($securedActions, $securedAction["inherit"]);
-                $inheritedRoles = is_array($inheritedRoles) ? $inheritedRoles : array();
-                $actionRoles = array_merge($actionRoles, $inheritedRoles);
+            if(isset($securedAction["inherit"]) && is_array($securedAction["inherit"])) {
+                foreach($securedAction["inherit"] as $inherit) {
+                    $inheritedRoles = $this->getInheritedRoles($securedActions, $inherit);
+                    $actionRoles = array_merge($actionRoles, $inheritedRoles);
+                }
             }
 
             // Verify if user has permissions
@@ -65,17 +68,16 @@ class SecuredRequestListener {
 
     public function getInheritedRoles($securedActions, $inherit) {
         foreach($securedActions as $action) {
-            if(isset($action["name"]) && $action["name"] == $inherit) {
-                if(!isset($action["roles"]) || !is_array($action["roles"])) return array();
-                if(isset($action["inherit"]) && $action["inherit"] != $inherit) {
-                    return array_merge($action["roles"], $this->getInheritedRoles($securedActions, $action["inherit"]));
-                }
-                return $action["roles"];
-            } else {
-                if(isset($action["roles"])) {
-                    return $action["roles"];
-                }
+            if(!isset($action["name"]) || $action["name"] != $inherit) continue; // Only interested in the inherited
+            if(!isset($action["roles"]) || !is_array($action["roles"])) return array();
+
+            // If this has inheritance handle it the same way
+            if(isset($action["inherit"]) && $action["inherit"] != $inherit) {
+                return array_merge($action["roles"], $this->getInheritedRoles($securedActions, $action["inherit"]));
             }
+
+            // Else just return the action roles
+            return $action["roles"];
         }
         return array();
     }
