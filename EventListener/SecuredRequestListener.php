@@ -38,32 +38,40 @@ class SecuredRequestListener {
         $globals = $this->container->hasParameter("nti_security.global") && is_array($this->container->getParameter('nti_security.global')) ? $this->container->getParameter('nti_security.global') : array();
         $securedActions = $this->container->hasParameter('nti_security.secured_actions') && is_array($this->container->getParameter('nti_security.secured_actions')) ? $this->container->getParameter('nti_security.secured_actions') : array();
 
+        $match = null;
+
         foreach($securedActions as $securedAction) {
             // If no fqan or roles is defined ignore it
-            if(!isset($securedAction["fqan"]) || !isset($securedAction["roles"])) continue;
-            if($fqan != $securedAction["fqan"]) continue; // This is not the action you are looking for.
+            if (!isset($securedAction["fqan"]) || !isset($securedAction["roles"])) continue;
+            if ($fqan != $securedAction["fqan"]) continue; // This is not the action you are looking for.
+            $match = $securedAction;
+        }
 
-            $actionRoles = $securedAction["roles"];
+        if(null === $match && $explicitDeny) {
+            $event->setController(array(new SecuredController($this->container), 'denied')); return; // No match, deny
+        } elseif(null === $match && !$explicitDeny) {
+            return; // No match, allow
+        }
 
-            // Handle inheritance
-            if(isset($securedAction["inherit"]) && is_array($securedAction["inherit"])) {
-                foreach($securedAction["inherit"] as $inherit) {
-                    $inheritedRoles = $this->getInheritedRoles($securedActions, $inherit);
-                    $actionRoles = array_merge($actionRoles, $inheritedRoles);
-                }
-            }
+        $actionRoles = $match["roles"];
 
-            // Verify if user has permissions
-            if($securedAction["fqan"] == $fqan) {
-                if(!array_diff(array_merge($globals, $actionRoles), $user->getRoles())) {
-                    return; // Has permissions
-                }
+        // Handle inheritance
+        if(isset($match["inherit"]) && is_array($match["inherit"])) {
+            foreach($match["inherit"] as $inherit) {
+                $inheritedRoles = $this->getInheritedRoles($securedActions, $inherit);
+                $actionRoles = array_merge($actionRoles, $inheritedRoles);
             }
         }
 
-        if($explicitDeny) {
-            $event->setController(array(new SecuredController($this->container), 'denied'));
+        // Verify if user has permissions
+        if($match["fqan"] == $fqan) {
+            if(!array_diff(array_merge($globals, $actionRoles), $user->getRoles())) {
+                return; // Has permissions
+            }
         }
+
+        // Deny
+        $event->setController(array(new SecuredController($this->container), 'denied'));
     }
 
     public function getInheritedRoles($securedActions, $inherit) {
