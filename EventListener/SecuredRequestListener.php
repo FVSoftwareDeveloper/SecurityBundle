@@ -40,7 +40,7 @@ class SecuredRequestListener {
         $securedActions = $this->container->hasParameter('nti_security.secured_actions') && is_array($this->container->getParameter('nti_security.secured_actions')) ? $this->container->getParameter('nti_security.secured_actions') : array();
 
         foreach($user->getRoles() as $role) {
-            if(in_array($role->getRole(), $godRoles)) {
+            if(in_array($role, $godRoles)) {
                 return; // Has god access
             }
         }

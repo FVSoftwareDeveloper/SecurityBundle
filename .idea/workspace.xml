@@ -26,8 +26,8 @@
       <file leaf-file-name="SecuredRequestListener.php" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/EventListener/SecuredRequestListener.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="129">
-              <caret line="37" column="133" selection-start-line="37" selection-start-column="133" selection-end-line="37" selection-end-column="133" />
+            <state relative-caret-position="249">
+              <caret line="42" column="29" selection-start-line="42" selection-start-column="29" selection-end-line="42" selection-end-column="29" />
               <folding />
             </state>
           </provider>
@@ -83,6 +83,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scratches" />
       <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
@@ -118,7 +119,6 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -143,12 +143,13 @@
       <workItem from="1471013998884" duration="647000" />
       <workItem from="1471127943642" duration="69000" />
       <workItem from="1471128695620" duration="50000" />
-      <workItem from="1476197644927" duration="289000" />
+      <workItem from="1476197644927" duration="430000" />
+      <workItem from="1476199317327" duration="6000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1055000" />
+    <option name="totallyTimeSpent" value="1202000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="30" width="1360" height="654" extended-state="6" />
@@ -205,6 +206,14 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/EventListener/SecuredRequestListener.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/composer.json">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -221,8 +230,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/EventListener/SecuredRequestListener.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="129">
-          <caret line="37" column="133" selection-start-line="37" selection-start-column="133" selection-end-line="37" selection-end-column="133" />
+        <state relative-caret-position="249">
+          <caret line="42" column="29" selection-start-line="42" selection-start-column="29" selection-end-line="42" selection-end-column="29" />
           <folding />
         </state>
       </provider>
