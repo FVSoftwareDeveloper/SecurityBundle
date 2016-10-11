@@ -35,8 +35,15 @@ class SecuredRequestListener {
 
 
         $explicitDeny = $this->container->hasParameter("nti_security.explicit_deny") ? ($this->container->getParameter("nti_security.explicit_deny") === true ? true : false) : true;
+        $godRoles = $this->container->hasParameter("nti_security.god_roles") ? $this->container->getParameter("nti_security.god_roles") : array();
         $globals = $this->container->hasParameter("nti_security.global") && is_array($this->container->getParameter('nti_security.global')) ? $this->container->getParameter('nti_security.global') : array();
         $securedActions = $this->container->hasParameter('nti_security.secured_actions') && is_array($this->container->getParameter('nti_security.secured_actions')) ? $this->container->getParameter('nti_security.secured_actions') : array();
+
+        foreach($user->getRoles() as $role) {
+            if(in_array($role->getRole(), $godRoles)) {
+                return; // Has god access
+            }
+        }
 
         $match = null;
 
