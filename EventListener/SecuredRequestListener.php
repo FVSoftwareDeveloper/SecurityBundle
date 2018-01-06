@@ -28,7 +28,7 @@ class SecuredRequestListener {
             return;
         }
 
-       	$fqcn = $controller[0];
+       	$fqcn = get_class($controller[0]);
         $fqan = $fqcn."::".$controller[1];
 
 
