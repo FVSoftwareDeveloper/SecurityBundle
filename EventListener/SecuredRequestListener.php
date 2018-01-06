@@ -5,7 +5,6 @@ namespace NTI\SecurityBundle\EventListener;
 use NTI\SecurityBundle\Controller\Secured\SecuredController;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
-use Symfony\Component\Security\Acl\Util\ClassUtils;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 class SecuredRequestListener {
@@ -29,8 +28,7 @@ class SecuredRequestListener {
             return;
         }
 
-        // Controller could be a proxy
-        $fqcn = ClassUtils::getRealClass($controller[0]);
+       	$fqcn = $controller[0];
         $fqan = $fqcn."::".$controller[1];
 
 
