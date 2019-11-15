@@ -28,7 +28,9 @@ class SecuredController extends Controller {
      * @Route("/denied", name="nti_secured_denied")
      */
     public function denied(Request $request) {
-        if (0 === strpos($request->headers->get('Content-Type'), 'application/json'))return new JsonResponse(array("message"=> "access denied"), 403);
+        if (0 === strpos($request->headers->get('Content-Type'), 'application/json') || 
+            0 === strpos($request->headers->get('Content-Type'), 'application/javascript') || 
+            $request->isXmlHttpRequest())return new JsonResponse(array("message"=> "access denied"), 403);
         $template = $this->container->hasParameter("nti_security.error_template") ? $this->getParameter("nti_security.error_template") : "NTISecurityBundle:Security:error403.html.twig";
         return $this->render($template);
     }
