@@ -4,7 +4,8 @@ namespace NTI\SecurityBundle\EventListener;
 
 use NTI\SecurityBundle\Controller\Secured\SecuredController;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
+use Symfony\Component\HttpKernel\Event\ControllerEvent;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 class SecuredRequestListener {
@@ -12,11 +13,15 @@ class SecuredRequestListener {
     /** @var ContainerInterface $container */
     private $container;
 
+    /** @var TokenStorage $tokenStorage */
+    private $tokenStorage;
+
     public function __construct(ContainerInterface $container) {
         $this->container = $container;
+        $this->tokenStorage = new TokenStorage();
     }
 
-    public function onKernelController(FilterControllerEvent $event) {
+    public function onKernelController(ControllerEvent $event) {
         $user = $this->getUser();
         if(!$user) {
             // If explicit deny then throw error
@@ -102,7 +107,7 @@ class SecuredRequestListener {
     public function getUser()
     {
 
-        if (null === $token = $this->container->get('security.token_storage')->getToken()) {
+        if (null === $token = $this->tokenStorage->getToken()) {
             // no authentication information is available
             return null;
         }
